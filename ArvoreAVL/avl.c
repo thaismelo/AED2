@@ -3,15 +3,17 @@
 #include "avl.h"
 
 void imprimir(no *raiz){
-    printf("[%d] [%d] ", raiz->valor, raiz->fb);
+    printf("%d [%d] ", raiz->valor, raiz->fb);
 }
 
 void preOrder(no *raiz){
+    printf("(");
     if(raiz!=NULL){
         imprimir(raiz);
         preOrder(raiz->esq);
         preOrder(raiz->dir);
     }
+    printf(")");
 }
 void inOrder(no *raiz){
     if(raiz!=NULL){
@@ -45,10 +47,13 @@ no* rotacao_simples_direita(no *p){
 
     p->esq = t2;
     u->dir = p;
-
-    p->fb = 0;
-    u->fb = 0;
-    
+    if(u->fb==0){
+        p->fb = -1;
+        u->fb = 1; 
+    }else{   
+        p->fb = 0;
+        u->fb = 0;
+    }
     return u;
 }
 
@@ -61,9 +66,13 @@ no* rotacao_simples_esquerda(no *p){
     p->dir = t2;
     u->esq = p;
 
-    p->fb = 0;
-    u->fb = 0;
-    
+    if(u->fb==0){
+        p->fb = 1;
+        u->fb = -1; 
+    }else{   
+        p->fb = 0;
+        u->fb = 0;
+    }
     return u;
 }
 no* rotacao_dupla_direita(no *p){
@@ -149,28 +158,32 @@ no* rotacao_dupla_esquerda(no *p){
 }
 
 no* rotacionar(no *pivo){
-    if(pivo->fb>0){
-       switch(pivo->dir->fb) 
-			{
-						case 1:
-								return rotacao_simples_esquerda(pivo);
-						case -1:
-								return rotacao_dupla_esquerda(pivo);					
-						case 0:
-								return pivo;
-			} 
-	} else {
-			switch(pivo->esq->fb) {
-				case -1:
-						return rotacao_simples_direita(pivo);
-				case 1:
-						return rotacao_dupla_direita(pivo);	
-				case 0:
-						return pivo;
-			}
-	}
+        if(pivo->fb>0){
+            switch(pivo->dir->fb){
+                case 0:
+                    return rotacao_simples_esquerda(pivo);
+                    break;
+                case 1:
+                    return rotacao_simples_esquerda(pivo);
+                    break;
+                case -1:
+                   return rotacao_dupla_esquerda(pivo);
+                   break;
+             }
+        }else{
+             switch(pivo->esq->fb){
+                case 0:
+                    return rotacao_simples_direita(pivo);
+                    break;
+                case 1:
+                    return rotacao_dupla_direita(pivo);
+                    break;
+                case -1:
+                   return rotacao_simples_direita(pivo);
+                   break;
+             }
+        }
         
-
 }
 
 
@@ -228,5 +241,114 @@ no * inserir (no* raiz, int valor, int *cresceu){
            }
            return raiz;
     }
+}
+int maiorDescendente(no *raiz){
+    if(raiz != NULL){
+        if(raiz->dir == NULL){
+            return raiz->valor;
+        }else{
+            maiorDescendente(raiz->dir);
+        }
+    }
+}
+
+no* remover(no *raiz, int valor, int *diminuiu){
+    if(raiz==NULL)
+        return NULL;
+    if(valor == raiz->valor){
+        no *aux;
+        *diminuiu = 1;
+        if(raiz->dir==NULL && raiz->esq==NULL){
+            raiz = NULL;
+            free(raiz);
+        }
+       else if(raiz->dir == NULL){
+            aux = raiz;
+            raiz = raiz->esq;
+            free(aux);
+        }
+       else if(raiz->esq == NULL){
+            aux = raiz;
+            raiz = raiz->dir;
+            free(aux);
+        }else{
+            raiz->valor = maiorDescendente(raiz->esq);
+            raiz->esq = remover(raiz->esq, raiz->valor,diminuiu); 
+            if(*diminuiu) {
+                switch(raiz->fb) {
+                    case -1:
+                        raiz->fb = 0;
+                        *diminuiu = 1;
+                        break;
+                case 0:
+                        raiz->fb = 1;
+                        *diminuiu= 0;
+                        break;
+                case 1:
+                        raiz->fb = 2;
+                        if(raiz->dir->fb==0){
+                            *diminuiu= 0;
+                        }else{
+                            *diminuiu= 1;
+                  
+                        }
+                        return rotacionar(raiz);
+                    }
+
+            }
+        }              
+    }
+
+    else if(valor > raiz->valor){
+        raiz->dir = remover(raiz->dir,valor,diminuiu);
+        if(*diminuiu) {
+                       switch(raiz->fb) {
+                            case -1:
+                                 raiz->fb = -2;
+                                if(raiz->esq->fb==0){
+                                    *diminuiu=0;
+                                 }else{
+                                    *diminuiu = 1;
+                                }  
+                                return rotacionar(raiz);
+                            case 0:
+                                raiz->fb = -1;
+                                 *diminuiu= 0;
+                                 break;
+                            case 1:
+                                raiz->fb = 0;
+                                *diminuiu= 1;
+                                break;
+                       }
+
+                }                
+    }else if (valor < raiz->valor){
+        raiz->esq = remover(raiz->esq,valor,diminuiu);
+        if(*diminuiu) {
+            switch(raiz->fb) {
+                case -1:
+                    raiz->fb = 0;
+                    *diminuiu = 1;
+                    break;
+                case 0:
+                    raiz->fb = 1;
+                    *diminuiu= 0;
+                    break;
+                case 1:
+                    raiz->fb = 2;
+                    if(raiz->dir->fb==0){
+                        *diminuiu= 0;
+                    }else{
+                        *diminuiu= 1;
+                  
+                    }
+                    return rotacionar(raiz);
+                }
+
+            }
+               
+
+        }
+    return raiz;
 }
 

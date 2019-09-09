@@ -20,6 +20,7 @@ void limparArvore(no *raiz);
 no* inserir(no *raiz,int valor,int *cresceu);
 no* remover(no *raiz, int valor, int *diminuiu);
 no* rotacionar(no *pivo);
+int maiorDescendente(no *raiz);
 no* rotacao_simples_direita(no *p);
 no* rotacao_simples_esquerda(no *p);
 no* rotacao_dupla_direita(no *p);

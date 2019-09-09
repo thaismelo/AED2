@@ -13,12 +13,12 @@ int main(int argc, char *argv[]) {
             scanf("%d", &op);
             switch(op) {
                 int n;
-                int cresceu;
-                case 1:
-                     scanf("%d ", &n);
-                     raiz = inserir(raiz, n, &cresceu);        
-                     break;
+                int flag;
                 case 2:
+                     scanf("%d ", &n);
+                     raiz = inserir(raiz, n, &flag);        
+                     break;
+                case 9:
                     preOrder(raiz);
                     printf("\n");                    
                     break;
@@ -30,7 +30,11 @@ int main(int argc, char *argv[]) {
                     posOrder(raiz);                    
                     printf("\n");
                     break;
-                case 999:
+                case 8:
+                    scanf("%d ", &n);
+                    raiz = remover(raiz,n,&flag);
+                    break;
+                case 99:
                     exit(0);
             }
 
