@@ -7,13 +7,11 @@ void imprimir(no *raiz){
 }
 
 void preOrder(no *raiz){
-    printf("(");
     if(raiz!=NULL){
         imprimir(raiz);
         preOrder(raiz->esq);
         preOrder(raiz->dir);
     }
-    printf(")");
 }
 void inOrder(no *raiz){
     if(raiz!=NULL){
