@@ -105,7 +105,7 @@ no * recolorir(no *raiz){
     return raiz;    
 }
 
-no * rotacao_simples_direita(no *raiz){
+void rotacao_simples_direita(no *raiz, no* pivo){
     no *p, *u, *t2;
     
     //declaracao
@@ -120,11 +120,8 @@ no * rotacao_simples_direita(no *raiz){
     u->dir = VERMELHO;
     u->esq = VERMELHO;
     
-    return u;
-    
 }
-
-no * rotacao_simples_esquerda(no *raiz){
+void rotacao_simples_esquerda(no *raiz,no* pivo){
     no *p, *u, *t2;
     
     //declaracao
@@ -139,11 +136,9 @@ no * rotacao_simples_esquerda(no *raiz){
     u->dir = VERMELHO;
     u->esq = VERMELHO;
     
-    return u;
-    
 }
 
-no * rotacao_dupla_esquerda(no *raiz){
+void rotacao_dupla_esquerda(no *raiz,no* pivo){
     no *p, *u, *v, *t2,*t3;
     
     //declaracao
@@ -167,10 +162,8 @@ no * rotacao_dupla_esquerda(no *raiz){
     v->dir = VERMELHO;
     v->esq = VERMELHO;
     
-    return v;
-    
 }
-no * rotacao_dupla_direita(no *raiz){
+void rotacao_dupla_direita(no *raiz,no* pivo){
     no *p, *u, *v, *t2,*t3;
     
     //declaracao
@@ -194,8 +187,8 @@ no * rotacao_dupla_direita(no *raiz){
     v->dir = VERMELHO;
     v->esq = VERMELHO;
     
-    return v;
-    
 }
+
+
 
 

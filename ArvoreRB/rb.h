@@ -3,10 +3,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-enum COR{PRETO,VERMELHO};
+typedef enum COR{PRETO,VERMELHO} CORES;
 typedef struct no{
     int valor;
-    COR cor;
+    CORES cor;
     struct no* esq;
     struct no* dir;
     struct no* pai;
@@ -31,8 +31,8 @@ no* remover(no *raiz, int valor,no *pai);
 
 no* rotacionar(no *pivo);
 int maiorDescendente(no *raiz);
-no* rotacao_simples_direita(no *p);
-no* rotacao_simples_esquerda(no *p);
-no* rotacao_dupla_direita(no *p);
-no* rotacao_dupla_esquerda(no *p);
+void rotacao_simples_direita(no *raiz,no* pivo);
+void rotacao_simples_esquerda(no *raiz,no* pivo);
+void rotacao_dupla_direita(no *raiz,no* pivo);
+void rotacao_dupla_esquerda(no *raiz,no* pivo);
 #endif 
