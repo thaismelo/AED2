@@ -3,7 +3,7 @@
 #include "avl.h"
 
 void imprimir(no *raiz){
-    printf("%d [%d] ", raiz->valor, raiz->fb);
+    printf("[%d, %d] ", raiz->valor, raiz->fb);
 }
 
 void preOrder(no *raiz){

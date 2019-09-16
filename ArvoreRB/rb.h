@@ -11,28 +11,25 @@ typedef struct no{
     struct no* dir;
     struct no* pai;
 }no;
+typedef no * arvore;
+no* criarNo(int valor);
 
-void imprimir(no *raiz);
-void preOrder(no *raiz);
-void inOrder(no *raiz);
-void posOrder(no *raiz);
 
-no* inserir(no *raiz,int valor,no *pai);
-int cor(no *raiz);
-int ehraiz(no *raiz);
-int ehEsquerdo(no *raiz);
-int ehDireito(no *raiz);
-no* tio(no *raiz);
-no* avo(no *raiz);
-no* recolorirRaiz(no *raiz);
-no* recolorir(no *raiz);
-
-no* remover(no *raiz, int valor,no *pai);
-
-no* rotacionar(no *pivo);
+void imprimir(arvore a);
+void preOrder(arvore a);
+void inicializar(arvore *nova);
+void inserir(arvore *raizInicializada,int valor);
+int cor(no *pivo);
+int ehraiz(no *pivo);
+int ehFilhoEsquerdo(no *pivo);
+int ehFilhoDireito(no *pivo);
+no* buscarTio(no *pivo);
+no* buscarAvo(no *pivo);
+void recolorir(no *pivo);
+no* remover(no *raiz, int valor);
 int maiorDescendente(no *raiz);
-void rotacao_simples_direita(no *raiz,no* pivo);
-void rotacao_simples_esquerda(no *raiz,no* pivo);
-void rotacao_dupla_direita(no *raiz,no* pivo);
-void rotacao_dupla_esquerda(no *raiz,no* pivo);
+void rotacao_simples_direita(arvore *arvore,no* pivo);
+void rotacao_simples_esquerda(arvore *arvore,no* pivo);
+void rotacao_dupla_direita(arvore *arvore,no* pivo);
+void rotacao_dupla_esquerda(arvore *arvore,no* pivo);
 #endif 
