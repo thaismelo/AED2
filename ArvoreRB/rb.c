@@ -40,27 +40,15 @@ int cor(no *raiz){
 }
 
 int ehRaiz(no *pivo){
-    if(pivo->pai==NULL){
-        return 1;
-    }else{
-        return 0;
-    }
+   return (pivo->pai==NULL);
 }
 
 int ehFilhoEsquerdo(no *pivo){
-    if(pivo->pai->esq==pivo){
-        return 1;
-    }else{
-        return 0;
-    }
+    return (pivo->pai != NULL && pivo==pivo->pai->esq);
 }
 
 int ehFilhoDireito(no *pivo){
-    if(pivo==pivo->pai->dir){
-        return 1;
-    }else{
-        return 0;
-    }
+    return (pivo->pai !=NULL && pivo==pivo->pai->dir);
 }
 
 no * buscarAvo(no *pivo){
@@ -79,6 +67,13 @@ no * buscarTio(no *novo){
     }
 }
 
+no* buscarIrmao(no *pivo){
+    if(ehFilhoEsquerdo(pivo)){
+        return pivo->pai->dir;
+    }else{
+        return pivo->pai->esq;
+    }
+}
 void recolorir(no *pivo){
     no * avo = buscarAvo(pivo);
     if(ehRaiz(avo)){
@@ -92,189 +87,147 @@ void recolorir(no *pivo){
 }
 
 void rotacao_simples_direita(arvore* arvore,no *pivo){
-    no *u, *t2;
-    u= pivo->esq;    
-    if(u->dir!=NULL){
-        t2 = u->dir;
-    }else{
-        t2 = NULL;
-    } 
-      
-    //rotação    
-    if(t2 != NULL){
-        pivo->esq = t2;
-        t2->pai = pivo;
-    }else{
-        pivo->esq=NULL;
-    }
-    //pai de u
-    if(pivo->pai!=NULL){
-        if(ehFilhoEsquerdo(pivo)){
-            u->pai->esq = pivo->pai;       
-        }else{
-           u->pai->dir = pivo->pai;  
-        }
-    }else{
-        u->pai = NULL;
-        *arvore = u;
-    }
+   no *u, *t2;
+   u = pivo->esq;
+   t2 = u->dir;
+   
+    //rotação
+    pivo->esq = t2;
     u->dir = pivo;
+    
+    //colorir
+    u->cor=PRETO;
+    pivo->cor=VERMELHO;
+    
+    //atualizar pais
+    if(t2!=NULL)
+        t2->pai = pivo;
+
+    u->pai = pivo->pai;
+
+    if(ehRaiz(pivo)){
+        *arvore = u;
+    }else{
+        if(ehFilhoDireito(pivo)){
+            pivo->pai->dir = u;
+        }else{  
+            pivo->pai->esq = u;
+        }
+    }
     pivo->pai = u;
     
-    //corrigindo cores
-    u->cor=PRETO;
-    u->dir->cor = VERMELHO;
+
     
 }
 void rotacao_simples_esquerda(arvore *arvore, no* pivo){
     no *u, *t2;
     u= pivo->dir;
-    if(u->esq !=NULL){
-        t2 = u->esq;
-    }else{
-        t2 = NULL;
-    }
-    
+    t2 = u->esq;
     //rotação
+    pivo->dir = t2;
     if(t2!=NULL){
-        pivo->dir = t2;
         t2->pai = pivo;
-    }else{
-        pivo->dir = NULL;
     }
-    if(pivo->pai!=NULL){
-        if(ehFilhoEsquerdo(pivo)){
-            u->pai->esq = pivo->pai;
-        }else{
-            u->pai->dir = pivo->pai;
-        }
-    }else{
-        u->pai =NULL;
-        *arvore = u;
-    }
-    u->esq = pivo;
-    pivo->pai = u;
 
+    u->esq = pivo;
+    u->pai = pivo->pai;
+    if(ehRaiz(pivo)){
+       *arvore = u;
+    }else{
+        if(ehFilhoEsquerdo(pivo)){
+            pivo->pai->esq = u;
+        }else{
+            pivo->pai->dir = u;
+        }
+    }
+     pivo->pai = u;
     //corrigindo cores
     u->cor=PRETO;
-    u->esq->cor = VERMELHO;
+    pivo->cor = VERMELHO;
     
 }
 
 void rotacao_dupla_esquerda(arvore *arvore,no *pivo){
-    no * u;
-    no * v;
-    no * t2;
-    no * t3;
+    no *u,*v,*t2,*t3;
     u = pivo->dir;
     v = u->esq;
-
-    if(v->esq!=NULL){
-        t2 = v->esq;
-    }else{
-        t2 = NULL;
-    }
-    if(v->dir!=NULL){
-        t3 = v->dir;
-    }else{
-        t3 = NULL;
-    }
+    t2 = v->esq;
+    t3 = v->dir;
     //primeira rotaçao
-    if(t3!=NULL){
-        u->esq = t3;
-        t3->pai = u;
-    }else{
-        u->esq = NULL;
-    }
-    v->dir = u;
-    u->pai = v;
-    pivo->dir = v;
-    v->pai = pivo;
+    u->esq = t3;
+    v->dir= u;
+    pivo->dir= v;   
+
     //segunda rotação
-    if(pivo->pai!=NULL){
-       if(ehFilhoEsquerdo(pivo)){
-            v->pai->esq = pivo->pai;
-        }else{
-            v->pai->dir = pivo->pai;
-        }
-    }else{
-        v->pai = NULL;
-        *arvore = v;
-    }
+    pivo->dir = t2;
+    v->esq = pivo; 
+
+    //atualizar cores
+    v->cor = PRETO;
+    pivo->cor = VERMELHO;
+
+    //atualizar pais   
     if(t2!=NULL){
-        pivo->dir = t2;
         t2->pai = pivo;
-    }else{
-        pivo->dir = NULL;
     }
-    v->esq = pivo;
+    if(t3!=NULL){
+        t3->pai = u;
+    }
+    u->pai = v;
+    v->pai = pivo->pai;
+    if(ehRaiz(pivo)){
+        *arvore = v;
+    }else{
+        if(ehFilhoDireito(pivo)){
+            pivo->pai->dir = v;
+        }else{
+            pivo->pai->esq = v;
+        }
+    }
     pivo->pai = v;
     
-    //corrigindo cores
-    v->cor = PRETO;
-    v->esq->cor= VERMELHO;
-
 }
 void rotacao_dupla_direita(arvore *arvore,no* pivo){
-    no * u;
-    no * v;
-    no * t2;
-    no * t3;
+    no *u,*v,*t2,*t3;
     u = pivo->esq;
     v = u->dir;
-
-    if(v->esq!=NULL){
-        t2 = v->esq;
-    }else{
-        t2 = NULL;
-    }
-    if(v->dir!=NULL){
-        t3 = v->dir;
-    }else{
-        t3 = NULL;
-    }
+    t2 = v->esq;
+    t3 = v->dir;
     //primeira rotaçao
-    if(t2!=NULL){
-        u->dir = t2;
-        t2->pai = u;
-    }else{
-        u->esq = NULL;
-    }
-     printf("1 oi");
+    u->dir = t2;
     v->esq = u;
-    u->pai = v;
-    pivo->esq = v;
-    v->pai = pivo;
-    //segunda rotação
-     printf("1");
-    if(pivo->pai!=NULL){
-       if(ehFilhoEsquerdo(pivo)){
-           pivo->pai->esq = v;
-        }else{
-           pivo->pai->dir = v;
-        }
-    }else{
-        v->pai = NULL;
-        *arvore = v;
-    }
-    printf("1");
-    if(t3!=NULL){
-        pivo->esq = t3;
-        t3->pai = pivo;
-    }else{
-        pivo->esq = NULL;
-    }
-    v->dir = pivo;
-    printf("a");
-    pivo->pai = v;
-    printf("b");
-    //corrigindo cores
-    v->cor = PRETO;
-    v->dir->cor= VERMELHO;
+    pivo->esq= v;   
 
+    //segunda rotação
+    pivo->esq = t3;
+    v->dir = pivo; 
+
+    //atualizar cores
+    v->cor = PRETO;
+    pivo->cor = VERMELHO;
+
+    //atualizar pais   
+    if(t2!=NULL){
+        t2->pai = u;
+    }
+    if(t3!=NULL){
+        t3->pai = pivo;
+    }
+    u->pai = v;
+    v->pai = pivo->pai;
+    if(ehRaiz(pivo)){
+        *arvore = v;
+    }else{
+        if(ehFilhoDireito(pivo)){
+            pivo->pai->dir = v;
+        }else{
+            pivo->pai->esq = v;
+        }
+    }
+    pivo->pai = v;
 }
 
-void corrigir(arvore *arvore, no *novo){
+void ajustar(arvore *arvore, no *novo){
     if(novo->pai == NULL){
         novo->cor=PRETO;
         *arvore = novo;
@@ -283,7 +236,7 @@ void corrigir(arvore *arvore, no *novo){
         //caso 1: tio é vermelho
         if(tio !=NULL && tio->cor==VERMELHO){
             recolorir(novo);
-            corrigir(arvore,novo->pai->pai);
+            ajustar(arvore,novo->pai->pai);
         //caso 2: tio é preto e novo é filho esquerdo e pai é esquerdo
         }else if(ehFilhoEsquerdo(novo) && ehFilhoEsquerdo(novo->pai)){
             rotacao_simples_direita(arvore,novo->pai->pai);  
@@ -323,8 +276,106 @@ void inserir(arvore *arvoreInicializada,int valor){
     }else{
         pai->dir = novo;
     }
-    corrigir(arvoreInicializada,novo);
+    ajustar(arvoreInicializada,novo);
+}
+int maiorDescendente(no *raiz){
+    if(raiz != NULL){
+        if(raiz->dir == NULL){
+            return raiz->valor;
+        }else{
+            maiorDescendente(raiz->dir);
+        }
+    }
+}
+void remover (arvore *raiz, int valor) {
+    no *temp, *pai, *novo;
+    temp = *raiz;
+    pai = NULL;
+    
+
+    //Percorre a arvore até achar o elemento ou null
+    while(temp != NULL && temp->valor != valor) {
+        pai = temp;
+        if(valor > temp->valor) {
+            temp = temp->dir;
+        } else {
+            temp = temp->esq;
+        }
+    }
+    
+    //Se o elemento não existe encerra a função
+    if(temp == NULL)
+          return ;
+
+    //O elemento a ser removido tem dois filhos
+    if(temp->esq != NULL && temp->dir != NULL) {
+        temp->valor = maiorDescendente(temp->esq);
+        remover(&temp->esq, temp->valor);
+    }
+    
+    //Tem somente o filho esquerdo vermelho
+    else if(temp->dir == NULL && temp->esq != NULL) {
+       if(ehFilhoEsquerdo(temp)){ //atualizar pai de temp
+            if(temp->esq!=NULL){
+                temp->esq->cor=PRETO;
+            }
+            temp->pai->esq = temp->esq;
+        }else{
+            if(temp->dir!=NULL){
+                temp->dir->cor=PRETO;
+            }
+            temp->pai->dir = temp->dir;
+        }
+    }
+    
+    //Tem somente o filho direito vermelho
+    else if(temp->esq == NULL && temp->dir != NULL) {
+       if(ehFilhoEsquerdo(temp)){ //atualizar pai de temp
+            if(temp->esq!=NULL){
+                temp->esq->cor=PRETO;
+            }
+            temp->pai->esq = temp->esq;
+        }else{
+            if(temp->dir!=NULL){
+                temp->dir->cor=PRETO;
+            }
+            temp->pai->dir = temp->dir; 
+        }  
+    }
+    //Não tem filhos e é vermelho
+   else if(temp->cor == VERMELHO) {
+        if(ehFilhoEsquerdo(temp)) {
+            temp->pai->esq = NULL;
+            temp = NULL;
+        } else {
+            temp->pai->dir = NULL;
+            temp = NULL;  
+        }
+    }
+    
+    else if(temp->cor=PRETO && (temp->esq==NULL && temp->dir==NULL)){
+          temp->cor = DUPLO_PRETO;
+          reajustar(raiz,temp);
+    }  
 }
 
+void reajustar(arvore *raiz, no pivo){
 
+    //caso 1
+    if(ehRaiz(pivo)){
+        pivo->cor= PRETO;
+        pivo = NULL;
+        *arvore = NULL;
+    }
+
+    //caso 2
+    if(cor(pivo->pai)==0 && cor(buscarIrmao(pivo))==1 && cor(buscarIrmao(pivo)->esq)== 0 && cor(buscarIrmao(pivo)->dir==0){
+        rotacao_caso2(raiz,pivo);
+    }
+    
+    //caso 3
+     if(cor(pivo->pai)==0 && cor(buscarIrmao(pivo))==0 && cor(buscarIrmao(pivo)->esq)== 0 && cor(buscarIrmao(pivo)->dir==0){
+        rotacao_caso3(raiz,pivo);
+    }
+}
 
