@@ -23,6 +23,10 @@ int main(int argc, char *argv[]) {
                     preOrder(nova);
                     printf("\n");                    
                     break;
+                case 3:
+                    scanf("%d ", &n);    
+                    remover(&nova,n);
+                    break;
                 case 999:
                     exit(0);
             }
