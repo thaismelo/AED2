@@ -1,0 +1,8 @@
+4 3
+A
+B
+C
+D
+AB
+BC
+AC
