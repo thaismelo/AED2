@@ -8,25 +8,24 @@ typedef struct lista{
 
 typedef struct listaAdjacencia{
     int nmrVertices;
-    int* posicao;
-    lista* verticesVizinhos;
+    lista** verticesVizinhos;
     
 }listaAdjacencia;
 
 listaAdjacencia* criarLista(int nmrV){
     listaAdjacencia* lista = (listaAdjacencia*)malloc(sizeof(listaAdjacencia));
     listaAdjacencia->nmrVertices = nmrV;
-    listaAdjacencia->posicao = (int*)malloc(nmrV*sizeof(int));
+    listaAdjacencia->verticesVizinhos = (lista**)malloc(nmrV*sizeof(lista*));
     
     int i;
     for(i=0; i<nmrV;i++){
-        listaAdjacencia->posicao[i] = (lista*)malloc(sizeof(lista));
+        listaAdjacencia->verticesVizinhos[i] = (lista*)malloc(sizeof(lista));
     }
 
     return listaAdjacencia;
 }
 
-void addAresta(listaAdjacencia* l, char a1,char a2, char vertices[]){
+void addVizinho(listaAdjacencia* l, char a1,char a2, char vertices[]){
     lista* vizinho = (lista*)malloc(sizeof(lista));
     vizinho->vertice = a2;
     vizinho->prox = NULL;
