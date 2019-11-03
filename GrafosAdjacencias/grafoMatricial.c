@@ -73,14 +73,13 @@ int main(void){
         vertices[i] = vertice; 
     }
     for(j=0; j<a;j++){ //pegando as arestas e colocando na matriz
-        fscanf(file, "%c %c%c",&lixo,&a1,&a2);
-        printf("\n%c%c",a1,a2);
+       fscanf(file, "%c %c%c",&lixo,&a1,&a2);
        addArestaNaMatriz(a1,a2,matriz,vertices,v);
     }
-    printf("\n%d %d\n", v,a);
+    printf("\n%d vertices %d arestas\n", v,a);
     
     for(i = 0; i<v; i++){
-        printf("v: %c ",vertices[i]);
+        printf("v[%d]: %c\t ",i,vertices[i]);
     }
     
     lerMatriz(v,matriz);
