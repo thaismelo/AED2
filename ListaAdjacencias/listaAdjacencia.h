@@ -3,9 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 //---------------------------------Lista--------------------------------
+typedef enum CORES{BRANCO,CINZA,PRETO} COR;
+
 typedef struct vertice{
     char letra;
     struct lista* adj;
+    COR cor;
+    vertice* pai;
+    int dist;
 }vertice;
 
 typedef struct no{
@@ -39,7 +44,7 @@ void imprimirListaADJ(grafo* gr);
 //--------------------------------Fila----------------------------------
 
 typedef struct noFila{
-   int info;
+   struct vertice* noVertice;
    struct noFila* ant;
 }noFila;
 

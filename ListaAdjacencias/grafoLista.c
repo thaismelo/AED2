@@ -38,7 +38,32 @@ void imprimirLista(lista* lista){
 }
 //---------------------------------Lista--------------------------------
 
+//---------------------------------Fila---------------------------------
+fila* inicializarFila(){
+   fila* fila = malloc(sizeof(fila));
+   fila->inicio = NULL;
+   fila->fim = NULL;
+   return fila;
+}
 
+void inserirNaFila(fila* fila,vertice* v){
+   noFila* novo = (noFila*) malloc(sizeof(noFila));
+   novo->noVertice = v;
+   novo->ant = NULL;
+   if(fila->inicio == NULL){
+       fila->inicio = novo;
+       fila->fim = novo;
+   }else{
+       fila->inicio->ant = novo;
+       fila->inicio= novo;
+   }
+}
+void removerDaFila(fila* fila){
+    if(fila->fim != NULL){
+       noFila* temp = fila->fim;
+       fila->fim = temp->ant;
+   }
+}
 //---------------------------------Grafo--------------------------------
 
 grafo* criarGrafo(int nmrV){
@@ -97,4 +122,5 @@ void imprimirListaADJ(grafo* gr){
 
 }
 
+//-------------------------Busca em largura---------------------------------
 
