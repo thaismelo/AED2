@@ -79,7 +79,7 @@ int main(void){
     printf("\n%d vertices %d arestas\n", v,a);
     
     for(i = 0; i<v; i++){
-        printf("v[%d]: %c\t ",i,vertices[i]);
+        printf("v[%d]: %c ",i,vertices[i]);
     }
     
     lerMatriz(v,matriz);
