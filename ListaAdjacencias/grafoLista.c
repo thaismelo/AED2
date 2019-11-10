@@ -12,6 +12,9 @@ vertice* inicializar_vertice(char letra){
     vertice* ver = (vertice*)malloc(sizeof(vertice));
     ver->letra = letra;
     ver->adj = inicializarLista();
+    ver->cor = BRANCO;
+    ver->dist = -1;
+    ver->pai = NULL;
     return ver;
 }
 void inserirNaLista(lista* lista, vertice* vertice){
@@ -64,6 +67,20 @@ void removerDaFila(fila* fila){
        fila->fim = temp->ant;
    }
 }
+int filaVazia(fila* fila){
+    if(fila->fim == NULL){
+        return 1;
+    }
+    return 0;
+}
+void imprimirFila(fila* fila){
+    noFila* cursor = fila->fim;
+    while(cursor->ant != NULL){
+        printf("%c\n", cursor->noVertice->letra);
+        cursor = cursor->ant;
+    }
+     printf("%c\n", cursor->noVertice->letra);
+}
 //---------------------------------Grafo--------------------------------
 
 grafo* criarGrafo(int nmrV){
@@ -115,7 +132,7 @@ void imprimirListaADJ(grafo* gr){
     for(cursor=gr->lista_v->inicial;cursor!=NULL;cursor= cursor->prox){
         printf("%c-> ", cursor->noVertice->letra);
         for(cursor2=cursor->noVertice->adj->inicial;cursor2!=NULL;cursor2= cursor2->prox){
-             printf("%c\t", cursor2->noVertice->letra);
+             printf("%c\t ", cursor2->noVertice->letra);
         }
         printf("\n");
     }
@@ -123,4 +140,51 @@ void imprimirListaADJ(grafo* gr){
 }
 
 //-------------------------Busca em largura---------------------------------
+void buscaEmLargura(grafo* g, char origem){
+    fila* fila = inicializarFila();
+    vertice* raiz = retornarVertice(origem,g->lista_v);
+    raiz->cor = CINZA;
+    raiz->dist = 0;
+    inserirNaFila(fila,raiz);
+    
+    //percorrendo toda a lista de adjacencia da origem
+    no* cursor;
+    for(cursor=raiz->adj->inicial; cursor!=NULL;cursor = cursor->prox){
+        cursor->noVertice->cor = CINZA;
+        cursor->noVertice->dist = raiz->dist +1;
+        cursor->noVertice->pai = raiz;
+        inserirNaFila(fila,cursor->noVertice);
+    }
+    raiz->cor = PRETO;
+    removerDaFila(fila);
+    
+    noFila* cursor2 = fila->fim;
+    no* cursor3;
+    while(!filaVazia(fila)){
+        for(cursor3 = fila->fim->noVertice->adj->inicial; cursor3!=NULL;cursor3=cursor3->prox){
+            if(cursor3->noVertice->cor == BRANCO){
+                 cursor3->noVertice->cor = CINZA;
+                 cursor3->noVertice->dist = raiz->dist +1;
+                 cursor3->noVertice->pai = cursor2->noVertice;
+                 inserirNaFila(fila,cursor3->noVertice);
+            }
+        }
+         cursor2->noVertice->cor = PRETO;
+         removerDaFila(fila);
+         cursor2 = cursor2->ant;
+    }
+}
+
+void imprimirListaPosBusca(grafo* gr){
+    no* cursor;
+    no* cursor2;
+    for(cursor=gr->lista_v->inicial;cursor!=NULL;cursor= cursor->prox){
+        printf("%c %c %d  %d-> ", cursor->noVertice->letra,cursor->noVertice->pai->letra,cursor->noVertice->cor,cursor->noVertice->dist);
+        printf("\n");
+    }
+
+}
+    
+
+
 

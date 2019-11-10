@@ -4,5 +4,5 @@ B
 C
 D
 AB
-BC
-AC
+BD
+CA
