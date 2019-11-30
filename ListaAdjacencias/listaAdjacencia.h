@@ -11,6 +11,8 @@ typedef struct vertice{
     COR cor;
     struct vertice* pai;
     int dist;
+    int tempoI;
+    int tempoF;
 }vertice;
 
 typedef struct no{
@@ -25,7 +27,7 @@ typedef struct lista{
 }lista;
 
 lista* inicializarLista();
-vertice* inicializarVertice(char letra);
+vertice* inicializar_vertice(char letra);
 void inserirNaLista(lista* lista, vertice* vertice);
 void imprimirLista(lista* lista);
 
@@ -60,4 +62,23 @@ void imprimirFila(fila* fila);
 int filaVazia(fila* fila);
 void buscaEmLargura(grafo* g, char origem);
 void imprimirListaPosBusca(grafo* gr);
+
+//--------------------------Pilha-----------------------------------
+typedef struct noPilha{
+    struct vertice* noVertice;
+    struct noPilha* proximo;
+}noPilha;
+
+typedef struct pilha{
+    struct noPilha* topo;
+}pilha;
+
+pilha* inicializarPilha();
+void push(pilha* pilha, vertice* v);
+void pop(pilha* pilha);
+void imprimirPilha(pilha* pilha);
+int pilhaVazia(pilha* pilha);
+void buscaEmProfundidade(grafo* g,int tempo);
+int visitarEmProfundidade(grafo* g, vertice* inicial, int tempo);
+void imprimirListaPosBuscaProf(grafo* g);
 #endif

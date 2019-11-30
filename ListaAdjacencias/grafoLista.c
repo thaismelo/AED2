@@ -15,6 +15,8 @@ vertice* inicializar_vertice(char letra){
     ver->cor = BRANCO;
     ver->dist = -1;
     ver->pai = NULL;
+    ver->tempoI = 0;
+    ver->tempoF = 0;
     return ver;
 }
 void inserirNaLista(lista* lista, vertice* vertice){
@@ -182,9 +184,102 @@ void imprimirListaPosBusca(grafo* gr){
         printf("%c %c %d  %d-> ", cursor->noVertice->letra,cursor->noVertice->pai->letra,cursor->noVertice->cor,cursor->noVertice->dist);
         printf("\n");
     }
+}
+//---------------------------Pilha----------------------------------------
+
+pilha* inicializarPilha(){
+    pilha* pilha = malloc(sizeof(pilha));
+    pilha->topo = NULL;
+    return pilha;
+}
+
+void push(pilha* pilha, vertice* v){
+    noPilha* noDaPilha = (noPilha*)malloc(sizeof(noPilha));
+    noDaPilha->noVertice = v;
+
+    if(!pilhaVazia(pilha)){
+        noPilha* temp = pilha->topo;
+        pilha->topo = noDaPilha;
+        noDaPilha->proximo = temp;
+    }else{
+        pilha->topo = noDaPilha;
+        noDaPilha->proximo = NULL;
+    }
+       
+}
+
+void pop(pilha* pilha){
+    if(!pilhaVazia(pilha)){
+        noPilha* temp = pilha->topo;
+        pilha->topo = temp->proximo;    
+    }
+}
+
+void imprimirPilha(pilha* pilha){
+    noPilha* cursor;
+    for(cursor = pilha->topo;cursor!=NULL;cursor=cursor->proximo){
+        printf("%c -> ", cursor->noVertice->letra);
+    }
+}
+
+int pilhaVazia(pilha* pilha){
+    if(pilha->topo==NULL){
+        return 1;
+    }
+    return 0;
 
 }
-    
+//--------------------------Busca em Profundidade---------------------
+void buscaEmProfundidade(grafo* g,int tempo){
+    no* cursor = g->lista_v->inicial;
+    while(cursor!=NULL){
+        if(cursor->noVertice->cor==BRANCO){
+            tempo = visitarEmProfundidade(g,cursor->noVertice,tempo);
+        }
+        cursor = cursor->prox;
+    }
 
+    cursor =  g->lista_v->inicial; 
+    while(cursor!=NULL){
+        printf("%c - %d/%d\n",cursor->noVertice->letra,cursor->noVertice->tempoI,cursor->noVertice->tempoF);
+        cursor = cursor->prox;
+    }
+}
+
+int visitarEmProfundidade(grafo* g, vertice* inicial, int tempo){
+    inicial->cor = CINZA;
+    tempo = tempo +1;
+    inicial->tempoI = tempo;
+
+    no* cursor = inicial->adj->inicial;
+
+    while(cursor!=NULL){//tenho vizinhos a serem visitados
+        if(cursor->noVertice->cor==BRANCO){
+            cursor->noVertice->pai = inicial;
+            tempo = visitarEmProfundidade(g,cursor->noVertice, tempo);
+        }
+        cursor = cursor->prox;
+    }
+    inicial->cor = PRETO;
+    tempo = tempo+1;
+    inicial->tempoF = tempo;
+
+    return tempo;
+}
+
+void imprimirListaPosBuscaProf(grafo* g){
+    no* cursor = g->lista_v->inicial;
+    while(cursor!=NULL){
+       // if(cursor->noVertice->pai==NULL){
+             printf("%c - %d  %d %d ", cursor->noVertice->letra,cursor->noVertice->cor,cursor->noVertice->tempoI,cursor->noVertice->tempoF);
+             printf("\n");
+             cursor = cursor->prox;
+       /* }else{
+            printf("%c %c %d %d %d ", cursor->noVertice->letra,cursor->noVertice->pai->letra,cursor->noVertice->cor,cursor->noVertice->tempoI,cursor->noVertice->tempoF);
+            printf("\n");
+        }
+        */
+    }
+}
 
 

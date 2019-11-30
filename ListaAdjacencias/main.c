@@ -28,10 +28,13 @@ int main(int argc, char *argv[]) {
         addAresta(gr,a1,a2);
     }
     imprimirListaADJ(gr);
-    char origem;
+   /* char origem;
     printf("\n Digite um vertice de origem:\n");
     scanf("%c", &origem);
     buscaEmLargura(gr,origem);
     imprimirListaPosBusca(gr);
+    */
+    buscaEmProfundidade(gr,0);
+   // imprimirListaPosBuscaProf(gr);
     fclose(file);
 }

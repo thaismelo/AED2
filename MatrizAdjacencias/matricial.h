@@ -10,6 +10,8 @@ typedef struct vertice{
     COR cor;
     struct vertice* pai;
     int dist;
+    int tempoI;
+    int tempoF;
 }vertice;
 
 typedef struct grafo{
@@ -46,4 +48,6 @@ int filaVazia(fila* fila);
 int verificarADJ(grafo* g,char vert1,char vert2);
 void buscaEmLargura(grafo* g, char origem);
 void imprimirListaPosBusca(grafo* gr);
+void buscaEmProfundidade(grafo* g, int tempo);
+int visitarEmProfundidade(grafo* g,  int tempo, vertice* inicial, vertice* vetor[]);
 #endif

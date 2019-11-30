@@ -32,6 +32,8 @@ vertice* inicializarVertice(char letra){
     ver->cor = BRANCO;
     ver->dist = -1;
     ver->pai = NULL;
+    ver->tempoI=0;
+    ver->tempoF = 0;
     return ver;
 }
 void addVertices(grafo* g, char vert, int indice){
@@ -171,3 +173,45 @@ void buscaEmLargura(grafo* g, char origem){
 
 }
 
+void buscaEmProfundidade(grafo* g, int tempo){
+    vertice* vetor[g->nmrVertices];
+    int k;
+
+    for(k=0;k<g->nmrVertices;k++){
+        vetor[k] = inicializarVertice(g->vertices[k]);
+    }
+
+    for(k=0;k<g->nmrVertices;k++){
+        if(vetor[k]->cor==BRANCO){
+            int tempo = visitarEmProfundidade(g,0,vetor[k],vetor);
+        }
+    }
+
+    for(k=0;k<g->nmrVertices;k++){
+        printf("\n%c - %d/%d\n",vetor[k]->letra,vetor[k]->tempoI,vetor[k]->tempoF);
+    }
+}
+
+int visitarEmProfundidade(grafo* g,int tempo,vertice* inicial,vertice* vetor[]){
+    printf("%d\n",tempo);
+    inicial->cor =CINZA;
+    tempo = tempo +1;
+    inicial->tempoI = tempo;
+
+    int k;
+    for(k=0;k<g->nmrVertices;k++){
+        if(verificarADJ(g,inicial->letra,vetor[k]->letra)){
+            printf("%c inicial do tempo %d: %d, %c do vetor: %d \n", inicial->letra,inicial->tempoI, inicial->cor,vetor[k]->letra, vetor[k]->cor);
+            if(vetor[k]->cor==BRANCO){
+                vetor[k]->pai =  inicial;
+                tempo = visitarEmProfundidade(g,tempo,vetor[k],vetor);
+            }
+        }
+    }
+
+    inicial->cor = PRETO;
+    tempo = tempo +1;
+    inicial->tempoF = tempo;
+
+    return tempo;
+}
