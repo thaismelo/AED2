@@ -33,9 +33,10 @@ int main(void){
     }
 
     imprimirGrafo(g);
-    //buscaEmLargura(g,'A');
+    printf("\n");
+    buscaEmLargura(g,'A');
 
-    buscaEmProfundidade(g,0);
+   // buscaEmProfundidade(g,0);
     fclose(file);
 
 

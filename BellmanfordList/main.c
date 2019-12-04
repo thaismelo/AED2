@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "listaAdjacencia.h"
-#include "grafoLista.c"
+#include "list.h"
+#include "list.c"
 
 int main(int argc, char *argv[]) {
     FILE *file;
@@ -12,9 +12,9 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-    int v,a,i,j;
-    fscanf(file, "%d %d", &v,&a); //pegando tamanho dos vertices e arestas
-    grafo* gr = criarGrafo(v);
+    int v,a,i,j,peso;
+    fscanf(file,"%d %d", &v,&a); //pegando tamanho dos vertices e arestas
+    grafo* gr = criarGrafo(v,a);
 
     char vertice,lixo,a1,a2;
 
@@ -24,17 +24,12 @@ int main(int argc, char *argv[]) {
     }
    
     for(j=0; j<a;j++){ //pegando as arestas
-        fscanf(file, "%c %c%c",&lixo,&a1,&a2);
-        addAresta(gr,a1,a2);
+        fscanf(file,"%c %c%c %d",&lixo,&a1,&a2,&peso);
+        addAresta(gr,a1,a2,peso);
     }
     imprimirListaADJ(gr);
-    char origem;
-    printf("\n Digite um vertice de origem:\n");
-    scanf("%c", &origem);
-    buscaEmLargura(gr,origem);
-    imprimirListaPosBusca(gr);
-    
-   // buscaEmProfundidade(gr,0);
-   // imprimirListaPosBuscaProf(gr);
+    printf("\n");
+    printf("%d\n",bellmanFord(gr,'C'));
+    imprimirArestas(gr);
     fclose(file);
 }

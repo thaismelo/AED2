@@ -193,7 +193,6 @@ void buscaEmProfundidade(grafo* g, int tempo){
 }
 
 int visitarEmProfundidade(grafo* g,int tempo,vertice* inicial,vertice* vetor[]){
-    printf("%d\n",tempo);
     inicial->cor =CINZA;
     tempo = tempo +1;
     inicial->tempoI = tempo;
@@ -201,7 +200,6 @@ int visitarEmProfundidade(grafo* g,int tempo,vertice* inicial,vertice* vetor[]){
     int k;
     for(k=0;k<g->nmrVertices;k++){
         if(verificarADJ(g,inicial->letra,vetor[k]->letra)){
-            printf("%c inicial do tempo %d: %d, %c do vetor: %d \n", inicial->letra,inicial->tempoI, inicial->cor,vetor[k]->letra, vetor[k]->cor);
             if(vetor[k]->cor==BRANCO){
                 vetor[k]->pai =  inicial;
                 tempo = visitarEmProfundidade(g,tempo,vetor[k],vetor);
